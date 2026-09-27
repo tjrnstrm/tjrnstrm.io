@@ -519,3 +519,97 @@ form > .reveal:nth-child(n + 3) {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   The "brief sent" modal (BriefSent.tsx). A scrim over the form, a glass card
+   that lifts in, and a green check that draws itself: the ring sweeps round,
+   then the tick writes itself, with one soft halo pulse (the same gesture as
+   the green "Taking new projects" dot on the home page).
+   ------------------------------------------------------------------------- */
+.sent-scrim {
+  animation: sent-scrim 320ms ease both;
+}
+.sent-card {
+  animation: sent-card 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.sent-lift {
+  animation: sent-lift 640ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.sent-disc {
+  transform-origin: center;
+  animation: sent-disc 460ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.sent-ring {
+  /* 2πr, r = 24 */
+  stroke-dasharray: 151;
+  stroke-dashoffset: 151;
+  animation: sent-ring 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.sent-tick {
+  stroke-dasharray: 44;
+  stroke-dashoffset: 44;
+  animation: sent-tick 340ms cubic-bezier(0.65, 0, 0.35, 1) 380ms forwards;
+}
+.sent-halo {
+  opacity: 0;
+  animation: sent-halo 1.6s cubic-bezier(0.15, 0.6, 0.3, 1) 300ms;
+}
+
+@keyframes sent-scrim {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sent-card {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+}
+@keyframes sent-lift {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes sent-disc {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@keyframes sent-ring {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sent-tick {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sent-halo {
+  from {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sent-scrim,
+  .sent-card,
+  .sent-lift,
+  .sent-disc,
+  .sent-halo {
+    animation: none;
+  }
+  .sent-ring,
+  .sent-tick {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

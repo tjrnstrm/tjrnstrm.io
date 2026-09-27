@@ -592,6 +592,17 @@ _Status: **A picked and shipped** (take two) — airy wordmark, no red period
     Portfolio, App and API. The About page has the code rain behind it (`page`
     variant at `strength={1}`, since there is no glass) and lost its two
     horizontal rules; only the footer line is left.
+49. **The brief sends through Formspree.** Send POSTs the brief as JSON to
+    Formspree (`src/lib/sendBrief.ts`, form `xzezjqgk`), which emails it to
+    tjernstrom@proton.me and keeps a copy in its dashboard. `email` is the
+    reply-to, `_subject` names the sender, each answered question is its own
+    field. Spam: Formspree's own filter, plus the hidden `website` honeypot sent
+    as `_gotcha` (Formspree drops those). No confirmation email to the visitor
+    (a paid feature, not needed). The button shows "Sending…" and is disabled
+    while waiting; on success the "Got it" view shows, on failure an inline
+    message with a mailto fallback. Free plan: 50 briefs a month. (A first
+    version with a Vercel function, Resend, Turnstile and rate limits was built
+    and dropped before shipping as more to run than a portfolio needs.)
 50. **Direct links.** `vercel.json` rewrites every path except `/api/*` to
     `index.html`, so opening or refreshing `/contact` or `/about` works instead
     of giving Vercel's 404 (the routes only exist in the browser). Real files
@@ -613,6 +624,21 @@ _Status: **A picked and shipped** (take two) — airy wordmark, no red period
     opens the visitor's mail app or shows the "Hit send" view: it does nothing
     until the real sending (`api/brief.ts`, Resend) has been finished and
     tested. A friend's Outlook opened on the old button, which is why.
+53. **"Got it" is a modal now.** `BriefSent` stopped being a view that replaced
+    the form and became a dialog over it: a blurred scrim, a glass card, and a
+    green check that draws itself (the ring sweeps, then the tick writes, with
+    one halo pulse — the `.sent-*` rules in `index.css`). It says the reply
+    comes from tjernstrom@proton.me to their address within 24 hours, and to
+    check the junk folder. The cuelume `success` sound was already playing on
+    send, `error` on failure. Deliberately **no summary and no "Copy brief"** —
+    a tidy copyable spec is not what this page is for; their own address stays
+    visible, which is the one thing the summary was good for (catching a typo
+    in it). It is a real dialog: Escape, the scrim and the ✕ close it, focus is
+    trapped and restored, and the body stops scrolling while it is open.
+    Closing leaves the brief as they filled it in, with Send disabled and
+    reading "Brief sent", so it can't go twice. It renders through a portal on
+    `<body>`: inside the page the contact wrapper's `isolate` cut off the
+    scrim's `backdrop-filter` and the blur did nothing.
 
 ---
 

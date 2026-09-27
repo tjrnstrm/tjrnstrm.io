@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { BriefForm } from '../components/contact/BriefForm';
 import { BriefSent } from '../components/contact/BriefSent';
 import { ContactDetails } from '../components/contact/ContactDetails';
@@ -16,6 +16,7 @@ import {
   summarise,
   type Brief,
 } from '../lib/brief';
+import { sendBrief } from '../lib/sendBrief';
 import { playSound } from '../lib/sound';
 
 export function Contact() {
@@ -23,31 +24,22 @@ export function Contact() {
 
   const [brief, setBrief] = useState<Brief>(INITIAL_BRIEF);
   const [done, setDone] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
   // Nothing is flagged until the first Send attempt; after that the stars
   // follow the fields live.
   const [showErrors, setShowErrors] = useState(false);
-  const mainRef = useRef<HTMLDivElement>(null);
-  const doneHeadingRef = useRef<HTMLHeadingElement>(null);
-  const firstRender = useRef(true);
 
   const set = (patch: Partial<Brief>) => setBrief((b) => ({ ...b, ...patch }));
-
-  // Bring the swapped-in view (confirmation or form) to the top of the column.
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    mainRef.current?.scrollIntoView({ block: 'start' });
-    if (done) doneHeadingRef.current?.focus({ preventScroll: true });
-  }, [done]);
 
   const rows = summarise(brief);
   const href = mailtoHref(brief, rows);
   const missing = missingFields(brief);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (sending) return;
     const firstMissing = REQUIRED.find((k) => missing[k]);
     if (firstMissing) {
       playSound('error');
@@ -61,8 +53,19 @@ export function Contact() {
       }
       return;
     }
-    // Sending is switched off until the form works for real (see DESIGN_LOG 52):
-    // a valid brief does nothing for now.
+    // The hidden honeypot field: people leave it empty, bots fill it in.
+    const honeypot = String(new FormData(e.currentTarget).get('website') ?? '');
+    setSending(true);
+    setFailed(false);
+    const sent = await sendBrief(brief, rows, honeypot);
+    setSending(false);
+    if (sent) {
+      playSound('success');
+      setDone(true);
+    } else {
+      playSound('error');
+      setFailed(true);
+    }
   };
 
   return (
@@ -84,30 +87,25 @@ export function Contact() {
           <ServicesList />
         </div>
 
-        <div
-          ref={mainRef}
-          className="flex scroll-mt-24 flex-col gap-5 lg:col-start-2 lg:row-start-1"
-        >
+        <div className="flex scroll-mt-24 flex-col gap-5 lg:col-start-2 lg:row-start-1">
           <div className="reveal flex flex-col justify-between gap-1 pb-1 font-mono text-[11px] tracking-[0.03em] text-zinc-600 sm:flex-row sm:items-center lg:px-2 lg:pt-2 dark:text-zinc-400">
             <span>Project brief</span>
             <span>{STEPS} steps · no cost · no commitment</span>
           </div>
 
-          {!done ? (
-            <BriefForm
-              brief={brief}
-              set={set}
-              flagged={showErrors ? missing : NOTHING_MISSING}
-              onSubmit={onSubmit}
-            />
-          ) : (
-            <BriefSent
-              rows={rows}
-              href={href}
-              onEdit={() => setDone(false)}
-              headingRef={doneHeadingRef}
-            />
-          )}
+          {/* The brief stays on the page behind the confirmation, so closing it
+              leaves the visitor looking at what they wrote. It just can't be
+              sent twice. */}
+          <BriefForm
+            brief={brief}
+            set={set}
+            flagged={showErrors ? missing : NOTHING_MISSING}
+            sending={sending}
+            sent={done}
+            failed={failed}
+            fallbackHref={href}
+            onSubmit={onSubmit}
+          />
         </div>
       </div>
 
@@ -116,6 +114,14 @@ export function Contact() {
         <ContactDetails />
       </aside>
       <Footer />
+
+      {done && !dismissed && (
+        <BriefSent
+          name={brief.name.trim()}
+          email={brief.email.trim()}
+          onClose={() => setDismissed(true)}
+        />
+      )}
     </div>
   );
 }

@@ -1,11 +1,26 @@
+import { EMAIL } from '../../../data/site';
 import type { StepProps } from '../../../lib/brief';
 import { PILL_FOCUS } from '../../../lib/type';
 import { RedArrow } from '../../ui/RedArrow';
 import { TextField } from '../Field';
 import { Question } from '../Question';
 
+type AnythingElseProps = StepProps & {
+  sending: boolean;
+  sent: boolean;
+  failed: boolean;
+  fallbackHref: string;
+};
+
 /** Step 6: references and free text, and the send button. */
-export function AnythingElseStep({ brief, set }: StepProps) {
+export function AnythingElseStep({
+  brief,
+  set,
+  sending,
+  sent,
+  failed,
+  fallbackHref,
+}: AnythingElseProps) {
   return (
     <Question id="q-else" title="Anything else?">
       <TextField
@@ -23,11 +38,30 @@ export function AnythingElseStep({ brief, set }: StepProps) {
       />
       <button
         type="submit"
-        className={`glass-pill group mt-1 inline-flex min-h-14 items-center gap-5 self-start rounded-full px-7 text-left text-[15px] font-medium ${PILL_FOCUS}`}
+        disabled={sending || sent}
+        className={`glass-pill group mt-1 inline-flex min-h-14 items-center gap-5 self-start rounded-full px-7 text-left text-[15px] font-medium disabled:opacity-60 ${
+          sent ? 'disabled:cursor-default' : 'disabled:cursor-wait'
+        } ${PILL_FOCUS}`}
       >
-        <span>Send brief · book free consultation</span>
-        <RedArrow className="text-red-500 dark:text-red-400" />
+        <span>
+          {sent ? 'Brief sent' : sending ? 'Sending…' : 'Send brief · book free consultation'}
+        </span>
+        {!sending && !sent && <RedArrow className="text-red-500 dark:text-red-400" />}
       </button>
+      <p
+        role="status"
+        className="-mt-2 text-sm leading-normal text-red-600 dark:text-red-400"
+      >
+        {failed && (
+          <>
+            That did not go through. Try again, or{' '}
+            <a href={fallbackHref} className="underline">
+              open it in your mail app
+            </a>{' '}
+            (or write to {EMAIL}).
+          </>
+        )}
+      </p>
     </Question>
   );
 }
