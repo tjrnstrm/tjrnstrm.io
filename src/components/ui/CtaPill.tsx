@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { RedArrow } from './RedArrow';
+import { AccentArrow } from './AccentArrow';
 import { TransitionLink } from './TransitionLink';
 
 const SIZE = {
@@ -20,13 +20,13 @@ const focusRing =
 
 /**
  * Call-to-action link: a frosted-glass pill (see .glass-pill in index.css)
- * with a red arrow. No border and no solid fill, like the rest of the
+ * with a teal arrow. No border and no solid fill, like the rest of the
  * site's controls.
  */
 export function CtaPill({ to, size = 'sm', quiet, children }: CtaPillProps) {
   if (quiet) {
     // The navbar version: no background, just the text and the same always-visible
-    // red arrow as the "Tell me what to build" link (it nudges right on hover).
+    // teal arrow as the "Tell me what to build" link (it nudges right on hover).
     // It keeps the regular small pill's height (py-2.5 with a 16px line) so the
     // navbar doesn't change height.
     return (
@@ -35,7 +35,7 @@ export function CtaPill({ to, size = 'sm', quiet, children }: CtaPillProps) {
         className={`group inline-flex items-center gap-2 rounded-full px-1 py-2.5 font-heading text-[13px] leading-4 font-medium whitespace-nowrap text-zinc-900 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300 ${focusRing}`}
       >
         <span>{children}</span>
-        <RedArrow className="tracking-normal text-red-500" />
+        <AccentArrow className="tracking-normal" />
       </TransitionLink>
     );
   }
@@ -46,7 +46,7 @@ export function CtaPill({ to, size = 'sm', quiet, children }: CtaPillProps) {
       className={`glass-pill group inline-flex items-center rounded-full font-heading font-medium whitespace-nowrap text-zinc-900 ${focusRing} dark:text-zinc-100 ${SIZE[size]}`}
     >
       <span>{children}</span>
-      <RedArrow className="tracking-normal text-red-500" />
+      <AccentArrow className="tracking-normal" />
     </TransitionLink>
   );
 }

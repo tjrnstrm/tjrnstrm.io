@@ -1,7 +1,7 @@
 import { EMAIL } from '../../../data/site';
 import type { StepProps } from '../../../lib/brief';
 import { PILL_FOCUS } from '../../../lib/type';
-import { RedArrow } from '../../ui/RedArrow';
+import { AccentArrow } from '../../ui/AccentArrow';
 import { TextField } from '../Field';
 import { Question } from '../Question';
 
@@ -46,7 +46,7 @@ export function AnythingElseStep({
         <span>
           {sent ? 'Brief sent' : sending ? 'Sending…' : 'Send brief · book free consultation'}
         </span>
-        {!sending && !sent && <RedArrow className="text-red-500 dark:text-red-400" />}
+        {!sending && !sent && <AccentArrow />}
       </button>
       <p
         role="status"
