@@ -30,7 +30,7 @@ export type TimelineItem = {
 export const EXPERIENCE: TimelineItem[] = [
   {
     title: 'Barrion · Fullstack Developer Intern',
-    period: '2026 – Present',
+    period: 'Fall 2026 · 8 weeks',
     description:
       'Fullstack work on an AI-driven security scanning platform: a TypeScript monorepo (Turborepo) with a Next.js frontend and Express and Hono services on PostgreSQL, Drizzle ORM and Google Cloud. AI-assisted development with Claude.',
   },
