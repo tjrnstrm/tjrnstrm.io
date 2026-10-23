@@ -1,13 +1,13 @@
 import type { FlaggedProps } from '../../../lib/brief';
+import { Chip } from '../Chip';
 import { TextField } from '../Field';
 import { Question } from '../Question';
 
-/** Step 2: who is asking. Name and email are mandatory. */
-export function AboutYouStep({
-  brief,
-  set,
-  flagged,
-}: FlaggedProps) {
+/**
+ * Step 3: who is asking. Name, email, company and what they do are mandatory;
+ * "No name yet" stands in for a company name that doesn't exist yet.
+ */
+export function AboutYouStep({ brief, set, flagged }: FlaggedProps) {
   return (
     <Question
       id="q-who"
@@ -35,20 +35,28 @@ export function AboutYouStep({
           onChange={(email) => set({ email })}
           placeholder="you@company.se"
         />
-        <TextField
-          label="Phone (optional)"
-          type="tel"
-          autoComplete="tel"
-          value={brief.phone}
-          onChange={(phone) => set({ phone })}
-        />
-        <TextField
-          label="Company (optional)"
-          autoComplete="organization"
-          value={brief.company}
-          onChange={(company) => set({ company })}
-          placeholder="Your company AB"
-        />
+        <div className="flex items-end gap-3 sm:col-span-2">
+          <TextField
+            label="Company or business name"
+            name="company"
+            required
+            flagged={flagged.company}
+            className="min-w-0 flex-1"
+            autoComplete="organization"
+            disabled={brief.noName}
+            value={brief.company}
+            onChange={(company) => set({ company })}
+            placeholder="Your company AB"
+          />
+          <Chip
+            type="checkbox"
+            name="noName"
+            size="sm"
+            label="No name yet"
+            checked={brief.noName}
+            onChange={() => set({ noName: !brief.noName })}
+          />
+        </div>
         <TextField
           label="What you do"
           name="industry"
@@ -70,6 +78,13 @@ export function AboutYouStep({
           value={brief.audience}
           onChange={(audience) => set({ audience })}
           placeholder="Construction firms, homeowners"
+        />
+        <TextField
+          label="Phone (optional)"
+          type="tel"
+          autoComplete="tel"
+          value={brief.phone}
+          onChange={(phone) => set({ phone })}
         />
       </div>
     </Question>

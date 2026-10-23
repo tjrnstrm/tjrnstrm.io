@@ -1,9 +1,10 @@
 import {
   CATEGORIES,
+  CHANGES,
   DOMAIN,
   LANGS,
   MAIL,
-  SECTIONS,
+  pagesFor,
   STYLES,
   THEMES,
   type Choice,
@@ -12,17 +13,28 @@ import { EMAIL } from '../data/site';
 
 /** Everything the visitor fills in on the contact page. */
 export type Brief = {
-  cats: string[];
-  types: string[];
+  /** 'new' or 'existing' (empty until picked) */
+  stage: string;
+  /** for an existing project: what to do with it (CHANGES ids) */
+  changes: string[];
+  /** for an existing project: where it lives now */
+  currentUrl: string;
+  /** what we are building: one CATEGORIES id */
+  cat: string;
+  /** the "what kind?" pick under the category, as 'category:kind' */
+  kind: string;
   other: string;
   name: string;
   email: string;
   phone: string;
   company: string;
+  /** "No name yet" ticked instead of a company name */
+  noName: boolean;
   industry: string;
   location: string;
   audience: string;
-  secs: string[];
+  /** PAGES ids */
+  pages: string[];
   cta: string;
   style: string;
   theme: string;
@@ -47,17 +59,21 @@ export type StepProps = {
 };
 
 export const INITIAL_BRIEF: Brief = {
-  cats: ['website'],
-  types: [],
+  stage: '',
+  changes: [],
+  currentUrl: '',
+  cat: '',
+  kind: '',
   other: '',
   name: '',
   email: '',
   phone: '',
   company: '',
+  noName: false,
   industry: '',
   location: '',
   audience: '',
-  secs: [],
+  pages: [],
   cta: '',
   style: '',
   theme: '',
@@ -86,8 +102,11 @@ const labelOf = (list: Choice[], id: string) =>
  * (or of its group of radio chips), so a failed Send can focus the first one.
  */
 export const REQUIRED = [
+  'stage',
+  'cat',
   'name',
   'email',
+  'company',
   'industry',
   'cta',
   'style',
@@ -108,8 +127,11 @@ export type FlaggedProps = StepProps & { flagged: Missing };
 /** The mandatory fields that are empty (or, for email, not an address). */
 export function missingFields(b: Brief): Missing {
   return {
+    stage: !b.stage,
+    cat: !b.cat,
     name: !b.name.trim(),
     email: !EMAIL_RE.test(b.email.trim()),
+    company: !b.noName && !b.company.trim(),
     industry: !b.industry.trim(),
     cta: !b.cta.trim(),
     style: !b.style,
@@ -128,8 +150,8 @@ export const NOTHING_MISSING = Object.fromEntries(
 
 /** Only answered questions make it into the brief; the three that always do come first. */
 export function summarise(b: Brief): BriefRows {
-  const project = CATEGORIES.filter((c) => b.cats.includes(c.id)).map((c) => {
-    const picked = c.types.filter((t) => b.types.includes(`${c.id}:${t}`));
+  const project = CATEGORIES.filter((c) => c.id === b.cat).map((c) => {
+    const picked = c.types.filter((t) => b.kind === `${c.id}:${t}`);
     return picked.length ? `${c.label} (${picked.join(', ')})` : c.label;
   });
   const choice = (list: Choice[], id: string, value: string) => {
@@ -137,7 +159,10 @@ export function summarise(b: Brief): BriefRows {
     if (!label) return '';
     return value.trim() ? `${label} · ${value.trim()}` : label;
   };
-  const who = [b.name.trim(), b.company.trim() && `(${b.company.trim()})`]
+  const who = [
+    b.name.trim(),
+    b.noName ? '(no company name yet)' : b.company.trim() && `(${b.company.trim()})`,
+  ]
     .filter(Boolean)
     .join(' ');
   const feel = [
@@ -153,11 +178,26 @@ export function summarise(b: Brief): BriefRows {
   ]
     .filter(Boolean)
     .join(', ');
-  const sections = SECTIONS.filter((s) => b.secs.includes(s.id)).map(
-    (s) => s.label,
+  const changes = CHANGES.filter((c) => b.changes.includes(c.id)).map((c) =>
+    c.label.toLowerCase(),
+  );
+  const start =
+    b.stage === 'new'
+      ? 'New project'
+      : b.stage === 'existing'
+        ? [
+            `Existing project${changes.length ? ` (${changes.join(', ')})` : ''}`,
+            b.currentUrl.trim(),
+          ]
+            .filter(Boolean)
+            .join(' · ')
+        : '';
+  const pages = pagesFor(b.cat).filter((p) => b.pages.includes(p.id)).map(
+    (p) => p.label,
   );
 
   const rows: BriefRows = [
+    ['Starting point', start],
     ['Project', project.length ? project.join('; ') : 'Not specified'],
     ['From', who || 'Not specified'],
     ['Reply to', b.email.trim() || 'Not specified'],
@@ -165,8 +205,8 @@ export function summarise(b: Brief): BriefRows {
     ['What they do', b.industry.trim()],
     ['Location', b.location.trim()],
     ['Customers', b.audience.trim()],
-    ['Something else', b.cats.includes('other') ? b.other.trim() : ''],
-    ['Sections', sections.join(', ')],
+    ['Something else', b.cat === 'other' ? b.other.trim() : ''],
+    ['Pages', pages.join(', ')],
     ['Visitors should', b.cta.trim()],
     ['Feel', feel],
     ['Brand colour', b.color.trim()],

@@ -12,7 +12,7 @@ type AnythingElseProps = StepProps & {
   fallbackHref: string;
 };
 
-/** Step 6: references and free text, and the send button. */
+/** Step 7: references and free text, and the send button. */
 export function AnythingElseStep({
   brief,
   set,

@@ -48,6 +48,7 @@ type TextFieldProps = Omit<FieldProps, 'children'> & {
   autoComplete?: string;
   /** A textarea with this many rows instead of a one-line input. */
   rows?: number;
+  disabled?: boolean;
 };
 
 /** A labelled glass text input (or textarea with `rows`). */
@@ -59,6 +60,7 @@ export function TextField({
   name,
   autoComplete,
   rows,
+  disabled,
   ...field
 }: TextFieldProps) {
   return (
@@ -76,12 +78,13 @@ export function TextField({
           type={type}
           name={name}
           required={field.required}
+          disabled={disabled}
           aria-invalid={field.required ? field.flagged : undefined}
           autoComplete={autoComplete}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="glass-field"
+          className="glass-field disabled:opacity-40"
         />
       )}
     </Field>

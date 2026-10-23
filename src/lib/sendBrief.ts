@@ -1,4 +1,5 @@
 import type { Brief, BriefRows } from './brief';
+import { toPrompt } from './prompt';
 
 /** The Formspree form the brief is sent to; it emails it to me and keeps a copy. */
 const FORMSPREE_URL = 'https://formspree.io/f/xzezjqgk';
@@ -24,8 +25,11 @@ export async function sendBrief(
     name,
     email: brief.email.trim(),
   };
-  if (brief.company.trim()) fields.company = brief.company.trim();
+  if (brief.noName) fields.company = 'No name yet';
+  else if (brief.company.trim()) fields.company = brief.company.trim();
   for (const [k, v] of rows) if (!SKIP.has(k)) fields[k] = v;
+  // last, so the overview reads first: the whole brief as a ready-to-paste build prompt
+  fields.Prompt = toPrompt(brief);
 
   try {
     const res = await fetch(FORMSPREE_URL, {

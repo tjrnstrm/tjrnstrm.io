@@ -6,7 +6,7 @@ import { Fold } from '../Fold';
 import { Question } from '../Question';
 
 /**
- * Step 4: style, theme, copy language and brand colour. Style, theme and
+ * Step 5: style, theme, copy language and brand colour. Style, theme and
  * language are mandatory. "Not sure" on style asks for sites they like, the
  * same field as on the last step; "Other" on language asks which one.
  */

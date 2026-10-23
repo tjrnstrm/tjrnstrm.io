@@ -5,7 +5,7 @@ import { TextField } from '../Field';
 import { Fold } from '../Fold';
 import { Question } from '../Question';
 
-/** Step 5: domain, business email and timeline. */
+/** Step 6: domain, business email and timeline. */
 export function PracticalStep({ brief, set, flagged }: FlaggedProps) {
   const wantsDomain = brief.domain === 'want';
   const wantsMail = brief.mail === 'want';

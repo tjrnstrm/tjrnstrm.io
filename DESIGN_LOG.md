@@ -640,6 +640,60 @@ _Status: **A picked and shipped** (take two) — airy wordmark, no red period
     `<body>`: inside the page the contact wrapper's `isolate` cut off the
     scrim's `backdrop-filter` and the blur did nothing.
 
+54. **New or existing, first.** The brief opens with its own card, "New or
+    existing?" (required, `stage`): "Something new" / "Something I already
+    have". Existing opens "What do you want done with it?" (Fresh new look,
+    Rebuild from scratch, Move to a new platform — `CHANGES`) and an optional
+    link to the current site, the most useful thing to rebuild from. The
+    "Redesign" category is gone (its options moved here; "Speed & SEO fixes"
+    and "Fix or extend what exists" were dropped), and the next card asks
+    "What is it?" instead of "What are we building?" for an existing project.
+    The brief text starts with a "Starting point" line, e.g. "Existing project
+    (fresh new look) · markarbeten.se". Now 7 steps. The aim for the whole
+    form: what it sends should read as a good build prompt for Lovable or
+    Claude.
+    The categories are down to Website, Portfolio, App and Something else
+    (API, Automation and "Not sure yet" removed; Something else covers the
+    last), and it is a single choice now (radio, `cat` instead of `cats`), so
+    only that category's "what kind?" opens. The "what kind?" under it is a single choice
+    too (`kind`, was `types`). Steps 1 and 2 are both required and start
+    empty (no preselected Website). They show no * up front; a red * appears on
+    the card title only after a Send with nothing picked (`Question flagged`),
+    since neither question has a label of its own. Recent client work gained ESA Audio Production (esa-audio.se,
+    Next.js) and Creekroad AB (creekroad.se, WordPress), listed first.
+
+55. **"Which pages should it have?"** Step 4 replaced "What goes on it?" (and
+    its "skip this if it is an API" hint) with one flat list of pages in
+    everyday words (`PAGES`): Home, About us, Services, Work / gallery, Prices,
+    Customer reviews, Questions & answers, Team, News / blog, Booking, Shop,
+    Checkout / payment, Log in, Customer dashboard, Admin dashboard, Contact.
+    The pages like Shop, Checkout and the dashboards say what it has to be able
+    to do, which is what a build prompt needs. (A separate list of 21 features
+    in five groups was tried first and dropped as too much.) Sent as a "Pages"
+    line (`pages`, was `secs`). The list follows step 2 (`pagesFor`, each
+    page lists the categories it fits): Website 15 pages, App 11 (adds Sign up,
+    Profile / settings, Customer dashboard), Portfolio 8; Something else or
+    nothing picked shows all 18. Pages ticked and then hidden by switching
+    category are not sent.
+
+56. **The brief comes with a build prompt.** `toPrompt()` (`src/lib/prompt.ts`)
+    writes the answers as a ready-to-paste prompt for Lovable or Claude, sent
+    as the last Formspree field, "Prompt". Plain sentence templates, no AI: an
+    opening line ("Build a booking website for Markarbeten AB (excavation
+    contractor) in Stockholm."), the existing site and what to do with it, who
+    it is for and what visitors should do, the pages, look and feel, then the
+    client's notes untouched. Anything unanswered is skipped. "What you do" is
+    free text, so it goes in brackets, which reads right for "excavation
+    contractor" and "dog walking" alike. Name, email, phone and the practical
+    bits (domain, business email, timeline) stay out of the prompt; they are
+    for me, not the builder. Gemini was considered for the wording and left
+    out: it would need a server function, a key, abuse protection and client
+    data going to Google, to polish text that Lovable polishes anyway. Company
+    is now required ("Company or business name"), with a "No name yet" chip that
+    counts as an answer, greys the field out and makes the prompt ask for a
+    placeholder name. About you was reordered: name, email; company; what you
+    do, location; customers; phone last.
+
 ---
 
 ## Appendix — Cold Open full source

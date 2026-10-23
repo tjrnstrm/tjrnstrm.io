@@ -1,39 +1,46 @@
 import { CATEGORIES } from '../../../data/brief';
-import { toggle, type StepProps } from '../../../lib/brief';
+import type { FlaggedProps } from '../../../lib/brief';
 import { Choices } from '../Choices';
 import { TextField } from '../Field';
 import { Fold } from '../Fold';
 import { Question } from '../Question';
 
-/** Step 1: what kind of project, with a "what kind?" follow-up per category. */
-export function BuildStep({ brief, set }: StepProps) {
+/**
+ * Step 2: what kind of project (one), with a "what kind?" follow-up (also one).
+ * Asked as "what is it?" when they are bringing something they already have.
+ */
+export function BuildStep({ brief, set, flagged }: FlaggedProps) {
+  const existing = brief.stage === 'existing';
   return (
     <Question
       id="q-build"
-      title="What are we building?"
-      hint="Pick everything that applies. Not sure is a perfectly good answer."
+      title={existing ? 'What is it?' : 'What are we building?'}
+      hint="Pick the one that fits best. If nothing fits, pick Something else and describe it."
+      flagged={flagged.cat}
     >
       <Choices
-        name="category"
+        radio
+        name="cat"
         size="md"
         options={CATEGORIES}
-        selected={brief.cats}
-        onPick={(id) => set({ cats: toggle(brief.cats, id) })}
+        selected={[brief.cat]}
+        onPick={(cat) => set({ cat })}
       />
       {CATEGORIES.filter((c) => c.types.length).map((c) => (
-        <Fold key={c.id} open={brief.cats.includes(c.id)}>
+        <Fold key={c.id} open={brief.cat === c.id}>
           <Choices
+            radio
             stagger
             name={`type-${c.id}`}
             size="sm"
             label={`${c.label}: what kind?`}
             options={c.types.map((t) => ({ id: `${c.id}:${t}`, label: t }))}
-            selected={brief.types}
-            onPick={(id) => set({ types: toggle(brief.types, id) })}
+            selected={[brief.kind]}
+            onPick={(kind) => set({ kind })}
           />
         </Fold>
       ))}
-      <Fold open={brief.cats.includes('other')}>
+      <Fold open={brief.cat === 'other'}>
         <TextField
           label="Something else: describe it"
           value={brief.other}

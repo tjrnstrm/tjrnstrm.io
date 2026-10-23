@@ -14,6 +14,20 @@ export type Project = {
 
 export const clientProjects: Project[] = [
   {
+    name: "ESA Audio Production",
+    description: "Website for an audio production studio. Live customer project.",
+    url: "https://esa-audio.se",
+    display: "esa-audio.se",
+    tags: ["Next.js"],
+  },
+  {
+    name: "Creekroad AB",
+    description: "Company website. Live customer project.",
+    url: "https://creekroad.se",
+    display: "creekroad.se",
+    tags: ["WordPress"],
+  },
+  {
     name: "Scentique",
     description:
       "E-commerce store for a fragrance brand. Built and deployed as a live customer project.",

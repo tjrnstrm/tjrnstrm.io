@@ -1,23 +1,27 @@
-import { SECTIONS } from '../../../data/brief';
+import { pagesFor } from '../../../data/brief';
 import { toggle, type FlaggedProps } from '../../../lib/brief';
 import { Choices } from '../Choices';
 import { TextField } from '../Field';
 import { Question } from '../Question';
 
-/** Step 3: the sections of the first version, and what visitors should do. */
+/**
+ * Step 4: the pages it should have, then what visitors should do. Pages like
+ * Shop, Checkout, Log in and the dashboards say what it has to be able to do.
+ * The list follows step 2: a portfolio isn't offered a shop or dashboards.
+ */
 export function SectionsStep({ brief, set, flagged }: FlaggedProps) {
   return (
     <Question
       id="q-sections"
-      title="What goes on it?"
-      hint="Sections for the first version. Skip this if it is an API or you are not sure."
+      title="Which pages should it have?"
+      hint="Tick the pages you want in the first version. Leave out anything you are unsure about; we can add it later."
     >
       <Choices
-        name="section"
+        name="page"
         size="sm"
-        options={SECTIONS}
-        selected={brief.secs}
-        onPick={(id) => set({ secs: toggle(brief.secs, id) })}
+        options={pagesFor(brief.cat)}
+        selected={brief.pages}
+        onPick={(id) => set({ pages: toggle(brief.pages, id) })}
       />
       <TextField
         label="What should visitors do?"

@@ -6,6 +6,7 @@ import { BuildStep } from './steps/BuildStep';
 import { FeelStep } from './steps/FeelStep';
 import { PracticalStep } from './steps/PracticalStep';
 import { SectionsStep } from './steps/SectionsStep';
+import { StartStep } from './steps/StartStep';
 
 type BriefFormProps = StepProps & {
   /** Mandatory fields to mark as missing (after a send attempt). */
@@ -34,7 +35,8 @@ export function BriefForm({
 }: BriefFormProps) {
   return (
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
-      <BuildStep brief={brief} set={set} />
+      <StartStep brief={brief} set={set} flagged={flagged} />
+      <BuildStep brief={brief} set={set} flagged={flagged} />
       <AboutYouStep brief={brief} set={set} flagged={flagged} />
       <SectionsStep brief={brief} set={set} flagged={flagged} />
       <FeelStep brief={brief} set={set} flagged={flagged} />
