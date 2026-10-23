@@ -54,14 +54,18 @@ function ContactNav({ onToggleTheme, scrolled, ref }: NavbarProps) {
   );
 }
 
-/** Home and About: About link and "Start a project" on the left, sound and theme toggles on the right. */
+/** Home, About and Portfolio: page links and "Start a project" on the left, sound and theme toggles on the right. */
 function SiteNav({
   onToggleTheme,
   scrolled,
   ref,
   pathname,
 }: NavbarProps & { pathname: string }) {
-  const onAboutPage = pathname === "/about";
+  const onSubPage = pathname !== "/";
+  const links = [
+    { to: "/about", label: "About" },
+    { to: "/portfolio", label: "Portfolio" },
+  ].filter((l) => l.to !== pathname);
   // The home page is a single screen and never scrolls, so its bar never turns
   // into a pill; the About page (which scrolls) still does.
   const pill = scrolled && pathname !== "/";
@@ -81,21 +85,23 @@ function SiteNav({
           : "py-5 px-6 sm:px-8 lg:px-12 border-transparent bg-transparent"
       }`}
     >
-      {/* No wordmark. About and "Start a project" sit on the left at every width
-          (the About page has its back arrow first, and no About link); the
-          sound and theme toggles are on the right. */}
+      {/* No wordmark. The page links and "Start a project" sit on the left at
+          every width (About and Portfolio start with the back arrow and leave out
+          their own link); the sound and theme toggles are on the right. */}
       <div className="flex items-center gap-1">
-        {onAboutPage ? (
-          <BackLink />
-        ) : (
+        {onSubPage && <BackLink />}
+        {links.map((l, i) => (
           <TransitionLink
-            to="/about"
-            className="nav-link -ml-3 font-heading text-[13px] font-normal"
+            key={l.to}
+            to={l.to}
+            className={`nav-link font-heading text-[13px] font-normal ${
+              i === 0 && !onSubPage ? "-ml-3" : ""
+            }`}
             onClick={() => playSound("scan")}
           >
-            About
+            {l.label}
           </TransitionLink>
-        )}
+        ))}
         <div className="mx-1 sm:ml-3">
           <CtaPill to="/contact" quiet>
             Start a project

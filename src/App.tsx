@@ -10,6 +10,7 @@ import { startHoverSounds } from './lib/sound';
 import { Home } from './pages/Home';
 import { Contact } from './pages/Contact';
 import { AboutPage } from './pages/AboutPage';
+import { PortfolioPage } from './pages/PortfolioPage';
 
 export default function App() {
   const { pathname } = useLocation();
@@ -33,6 +34,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -694,6 +694,25 @@ _Status: **A picked and shipped** (take two) — airy wordmark, no red period
     placeholder name. About you was reordered: name, email; company; what you
     do, location; customers; phone last.
 
+57. **Teal, and a Portfolio page.** The accent is teal instead of red:
+    `AccentArrow` (was `RedArrow`), teal-700 light / teal-500 dark, on every
+    action arrow. Errors stay red and success stays green, since they mean
+    something. The home page lost "Taking new projects" and its green dot (and
+    the `.status-ripple` CSS). New page `/portfolio` (`PortfolioPage`,
+    `ProjectShowcase`): "Recent client work / Portfolio.", then one project per
+    row with a large screenshot on alternating sides (stacked on phones), a
+    mono line of what it is, platform and "Handed over" year, the name, a short
+    description and the link (no underlines). Picked from three layouts (grid,
+    index, showcase); with four projects the showcase gives each the most room.
+    Screenshots are 16:10: fresh 1440×900 shots of ESA and Creekroad, and for
+    Scentique and Barber by David the old previews from before the clients
+    changed their sites (`*-pv.jpg`, kept as the originals), centre-cropped from
+    their wide format to 16:10 at full height.
+    Data in `projects.ts` (`what`, `handedOver`); Creekroad is tagged
+    WordPress and Elementor. "Got a project?" (`ContactCta`) moved from the
+    end of About to the end of Portfolio. The navbar links About and Portfolio;
+    each sub-page starts with the back arrow and leaves out its own link.
+
 ---
 
 ## Appendix — Cold Open full source

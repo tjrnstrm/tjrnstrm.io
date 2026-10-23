@@ -3,7 +3,7 @@ import { PAGE_HEADING } from '../../lib/type';
 import { CtaPill } from '../ui/CtaPill';
 import { Eyebrow } from '../ui/Eyebrow';
 
-/** Closing call-to-action between About and the footer. */
+/** Closing call-to-action at the end of the Portfolio page. */
 export function ContactCta() {
   return (
     <section id="brief" className="scroll-mt-24 py-14">
