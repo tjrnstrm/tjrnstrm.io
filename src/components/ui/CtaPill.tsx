@@ -32,7 +32,7 @@ export function CtaPill({ to, size = 'sm', quiet, children }: CtaPillProps) {
     return (
       <TransitionLink
         to={to}
-        className={`group inline-flex items-center gap-2 rounded-full px-1 py-2.5 font-heading text-[13px] leading-4 font-medium whitespace-nowrap text-zinc-900 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300 ${focusRing}`}
+        className={`group inline-flex items-center gap-2 rounded-full px-1 py-2.5 font-heading text-[13px] leading-4 font-normal whitespace-nowrap text-zinc-900 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-400 ${focusRing}`}
       >
         <span>{children}</span>
         <AccentArrow className="tracking-normal" />
