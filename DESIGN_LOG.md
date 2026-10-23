@@ -713,6 +713,15 @@ _Status: **A picked and shipped** (take two) — airy wordmark, no red period
     end of About to the end of Portfolio. The navbar links About and Portfolio;
     each sub-page starts with the back arrow and leaves out its own link.
 
+58. **Favicon.** Vite's purple lightning bolt is replaced by "t.": a lowercase t
+    in Sora 500 (traced to a path, so the SVG needs no font) with a teal full
+    stop, on a dark rounded square (#18181b). Picked from five candidates (t.
+    with and without the square, the teal arrow, tj, the dot alone).
+    `public/favicon.svg`, a 32px PNG fallback (`favicon-32.png`) and a square
+    180px `apple-touch-icon.png` for phone home screens, which round the corners
+    themselves. Heavier than the home page wordmark on purpose: Sora at 200 turns
+    to grey mush at 16px.
+
 ---
 
 ## Appendix — Cold Open full source
