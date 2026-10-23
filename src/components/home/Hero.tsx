@@ -18,8 +18,9 @@ export function Hero() {
           aria-label="Alexander Tjernström"
           className="font-headline -translate-y-[0.09em] font-extralight leading-none tracking-[0.02em] text-[clamp(2.5rem,7vw,5rem)]"
         >
-          tjrnstrm.
-
+          tjrnstrm
+          {/* the teal full stop, as on the favicon */}
+          <span className="text-teal-700 dark:text-teal-500">.</span>
         </h1>
 
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-mono text-[11px] sm:text-xs tracking-[0.03em] text-zinc-500 dark:text-zinc-400">
